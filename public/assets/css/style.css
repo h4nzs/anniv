@@ -1,0 +1,141 @@
+/* Import Google Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Dancing+Script&family=Poppins:wght@300;400&display=swap');
+
+body {
+    background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%);
+    font-family: 'Poppins', sans-serif;
+    color: #333;
+    margin: 0;
+    padding: 0;
+}
+
+h1, h2, h3 {
+    font-family: 'Dancing Script', cursive;
+    color: #c0392b;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
+}
+
+.ornament {
+    position: absolute;
+    width: 150px;
+    height: auto;
+    z-index: 0;
+}
+
+/* Ornamen dekoratif bunga */
+.ornament-top-left {
+    top: 10px;
+    left: 10px;
+}
+
+.ornament-bottom-right {
+    bottom: 10px;
+    right: 10px;
+}
+
+.ornament-top-right {
+    top: 10px;
+    right: 10px;
+}
+
+.ornament-bottom-left {
+    bottom: 10px;
+    left: 10px;
+}
+
+p {
+    font-size: 18px;
+    color: #555;
+}
+
+.container {
+    padding: 20px;
+}
+
+.btn-primary {
+    background-color: #c0392b;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 50px;
+    color: white;
+    font-size: 16px;
+    transition: all 0.3s ease;
+}
+
+.btn-primary:hover {
+    background-color: #e74c3c;
+    transform: scale(1.05);
+}
+
+.img-thumbnail {
+    border: none;
+    border-radius: 15px;
+    transition: transform 0.3s ease;
+}
+
+.img-thumbnail:hover {
+    transform: scale(1.1);
+}
+
+textarea {
+    width: 100%;
+    padding: 10px;
+    border-radius: 15px;
+    border: 2px solid #e74c3c;
+}
+
+textarea:focus {
+    outline: none;
+    border-color: #c0392b;
+}
+
+form button {
+    background-color: #e74c3c;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 30px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+form button:hover {
+    background-color: #c0392b;
+}
+
+.popup {
+    display: none;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: white;
+    padding: 20px;
+    border-radius: 20px;
+    box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.1);
+    text-align: center;
+}
+
+.popup.show {
+    display: block;
+    animation: fadeIn 0.5s ease-in-out;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translate(-50%, -60%); }
+    to { opacity: 1; transform: translate(-50%, -50%); }
+}
+    
+.butterfly {
+    position: absolute;
+    width: 50px;
+    animation: fly 12s infinite ease-in-out;
+}
+
+@keyframes fly {
+    0% { transform: translate(0, 0) rotate(0deg); }
+    25% { transform: translate(-100px, -200px) rotate(45deg); }
+    50% { transform: translate(100px, -150px) rotate(90deg); }
+    75% { transform: translate(-150px, -250px) rotate(135deg); }
+    100% { transform: translate(0, 0) rotate(180deg); }
+}
