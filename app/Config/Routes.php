@@ -32,6 +32,7 @@ $routes->get('posts/edit/(:num)', 'PostController::edit/$1');
 $routes->post('posts/update/(:num)', 'PostController::update/$1');
 $routes->post('posts/delete/(:num)', 'PostController::delete/$1');
 $routes->get('/chat', 'MessageController::index', ['filter' => 'authGuard']);
+$routes->get('chat/check-session', 'MessageController::checkSession');
 $routes->get('chat/searchUser', 'MessageController::searchUser', ['filter' => 'authGuard']);
 $routes->get('chat/getContacts', 'MessageController::getContacts', ['filter' => 'authGuard']);
 $routes->get('chat/getMessages/(:num)', 'MessageController::getMessages/$1', ['filter' => 'authGuard']);

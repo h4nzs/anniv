@@ -178,23 +178,35 @@
         });
 }
 
-    function sendMessage() {
-        let msg = document.getElementById('message').value;
-        let media = document.getElementById('media').files[0];
-        let formData = new FormData();
-        formData.append('message', msg);
-        formData.append('receiver_id', currentTarget);
-        if (media) formData.append('media', media);
+function sendMessage() {
+    let msg = document.getElementById('message').value;
+    let media = document.getElementById('media').files[0];
+    let formData = new FormData();
+    formData.append('message', msg);
+    formData.append('receiver_id', currentTarget);  // receiver_id adalah id pengguna yang dikirimi pesan
+    if (media) formData.append('media', media);
 
-        fetch('<?= base_url('chat/send') ?>', {
-            method: 'POST',
-            body: formData
-        }).then(() => {
-            document.getElementById('message').value = '';
-            document.getElementById('media').value = '';
-            loadConversation(currentTarget);
-        });
-    }
+    // Pastikan user sudah login (cek session)
+    fetch('<?= base_url('chat/check-session') ?>', {
+        method: 'GET'
+    }).then(response => response.json())
+      .then(data => {
+          if (data.loggedIn) {
+              // Jika sudah login, kirim pesan
+              fetch('<?= base_url('chat/send') ?>', {
+                  method: 'POST',
+                  body: formData
+              }).then(() => {
+                  document.getElementById('message').value = '';
+                  document.getElementById('media').value = '';
+                  loadConversation(currentTarget);  // Reload percakapan
+              });
+          } else {
+              window.location.href = '<?= base_url('login') ?>';  // Redirect ke halaman login
+          }
+      });
+}
+
 
     // 🔍 Tambahkan fungsi pencarian di sini
     function triggerSearch() {

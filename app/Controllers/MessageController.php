@@ -55,8 +55,13 @@ class MessageController extends BaseController
 
 public function getMessagesByUser($userId)
 {
-    $currentUserId = session('id');
-
+    $session = session();
+    $senderId = $session->get('id');
+    
+    if (!$senderId) {
+        return redirect()->to('/login');
+    }
+    
     if (!$currentUserId) {
         return $this->response->setStatusCode(401)->setJSON(['error' => 'User not logged in']);
     }
@@ -72,7 +77,13 @@ public function getMessagesByUser($userId)
 
     public function send()
 {
-    $senderId = session('id');
+    $session = session();
+    $senderId = $session->get('id');
+
+    // Pastikan user sudah login
+    if (!$senderId) {
+        return redirect()->to('/login');
+    }
     $receiverId = $this->request->getPost('receiver_id');
     $messageText = $this->request->getPost('message');
 
@@ -199,4 +210,17 @@ public function sendVoice()
         $messages = $messageModel->getMessagesByConversation($conversation_id);
         return $this->response->setJSON($messages);
     }
+
+    public function checkSession()
+{
+    $session = session();
+    $userId = $session->get('id');
+
+    if ($userId) {
+        return $this->response->setJSON(['logged_in' => true]);
+    }
+
+    return $this->response->setJSON(['logged_in' => false]);
+}
+
 }
