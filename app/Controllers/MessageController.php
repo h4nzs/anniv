@@ -59,17 +59,13 @@ public function getMessagesByUser($userId)
     $senderId = $session->get('id');
     
     if (!$senderId) {
-        return redirect()->to('/login');
-    }
-    
-    if (!$currentUserId) {
         return $this->response->setStatusCode(401)->setJSON(['error' => 'User not logged in']);
     }
 
     $convModel = new \App\Models\ConversationModel();
     $messageModel = new \App\Models\MessageModel();
 
-    $conversationId = $convModel->getOrCreateConversation($currentUserId, $userId);
+    $conversationId = $convModel->getOrCreateConversation($senderId, $userId);
     $messages = $messageModel->getMessagesByConversation($conversationId);
 
     return $this->response->setJSON($messages);
@@ -82,8 +78,9 @@ public function getMessagesByUser($userId)
 
     // Pastikan user sudah login
     if (!$senderId) {
-        return redirect()->to('/login');
+        return $this->response->setStatusCode(401)->setJSON(['error' => 'User not logged in']);
     }
+    
     $receiverId = $this->request->getPost('receiver_id');
     $messageText = $this->request->getPost('message');
 

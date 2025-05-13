@@ -154,28 +154,36 @@
     currentTarget = userId;
     fetch(`<?= base_url('chat/messages/user') ?>/${userId}`, {
     method: 'GET',
-    credentials: 'include' // Pastikan cookie session dikirim
-})        .then(res => res.json())
-        .then(data => {
-            let container = document.getElementById('messages');
-            container.innerHTML = '';
+    credentials: 'include'
+})
+.then(res => res.text()) // Ubah dari .json() ke .text()
+.then(text => {
+    try {
+        let data = JSON.parse(text);
+        let container = document.getElementById('messages');
+        container.innerHTML = '';
 
-            if (Array.isArray(data)) {
-                data.forEach(msg => {
-                    let div = document.createElement('div');
-                    div.className = 'message ' + (msg.sender_id == currentUser ? 'me' : 'other');
-                    div.textContent = msg.message;
-                    container.appendChild(div);
-                });
-            } else {
-                container.innerHTML = '<div class="text-center text-muted">Belum ada pesan.</div>';
-            }
+        if (Array.isArray(data)) {
+            data.forEach(msg => {
+                let div = document.createElement('div');
+                div.className = 'message ' + (msg.sender_id == currentUser ? 'me' : 'other');
+                div.textContent = msg.message;
+                container.appendChild(div);
+            });
+        } else {
+            container.innerHTML = '<div class="text-center text-muted">Belum ada pesan.</div>';
+        }
 
-            container.scrollTop = container.scrollHeight;
-        })
-        .catch(err => {
-            console.error('Gagal memuat pesan:', err);
-        });
+        container.scrollTop = container.scrollHeight;
+    } catch (err) {
+        console.error('Respon bukan JSON:', text); // ⬅️ tampilkan respon yang salah
+        throw err;
+    }
+})
+.catch(err => {
+    console.error('Gagal memuat pesan:', err);
+});
+
 }
 
 function sendMessage() {
@@ -183,28 +191,27 @@ function sendMessage() {
     let media = document.getElementById('media').files[0];
     let formData = new FormData();
     formData.append('message', msg);
-    formData.append('receiver_id', currentTarget);  // receiver_id adalah id pengguna yang dikirimi pesan
+    formData.append('receiver_id', currentTarget);
+    formData.append('<?= csrf_token() ?>', '<?= csrf_hash() ?>');
     if (media) formData.append('media', media);
 
-    // Pastikan user sudah login (cek session)
-    fetch('<?= base_url('chat/check-session') ?>', {
-        method: 'GET'
-    }).then(response => response.json())
-      .then(data => {
-          if (data.loggedIn) {
-              // Jika sudah login, kirim pesan
-              fetch('<?= base_url('chat/send') ?>', {
-                  method: 'POST',
-                  body: formData
-              }).then(() => {
-                  document.getElementById('message').value = '';
-                  document.getElementById('media').value = '';
-                  loadConversation(currentTarget);  // Reload percakapan
-              });
-          } else {
-              window.location.href = '<?= base_url('login') ?>';  // Redirect ke halaman login
-          }
-      });
+    fetch('<?= base_url('chat/send') ?>', {
+        method: 'POST',
+        body: formData,
+        credentials: 'include' // penting agar session tetap terbaca
+    }).then(response => {
+        return response.json();
+    }).then(data => {
+        if (data.status === 'success') {
+            document.getElementById('message').value = '';
+            document.getElementById('media').value = '';
+            loadConversation(currentTarget);
+        } else {
+            console.error('Gagal kirim:', data.error);
+        }
+    }).catch(err => {
+        console.error('Error:', err);
+    });
 }
 
 
