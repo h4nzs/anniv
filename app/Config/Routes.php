@@ -31,16 +31,6 @@ $routes->post('/comments/store', 'CommentController::store', ['filter' => 'authG
 $routes->get('posts/edit/(:num)', 'PostController::edit/$1');
 $routes->post('posts/update/(:num)', 'PostController::update/$1');
 $routes->post('posts/delete/(:num)', 'PostController::delete/$1');
-$routes->get('/chat', 'MessageController::index', ['filter' => 'authGuard']);
-$routes->get('chat/check-session', 'MessageController::checkSession');
-$routes->get('chat/searchUser', 'MessageController::searchUser', ['filter' => 'authGuard']);
-$routes->get('chat/getContacts', 'MessageController::getContacts', ['filter' => 'authGuard']);
-$routes->get('chat/getMessages/(:num)', 'MessageController::getMessages/$1', ['filter' => 'authGuard']);
-$routes->get('chat/messages/user/(:num)', 'MessageController::getMessagesByUser/$1', ['filter' => 'authGuard']);
-$routes->get('chat/getConversationId/(:num)', 'MessageController::getConversationId/$1', ['filter' => 'authGuard']);
-$routes->get('chat/getConversationId', 'MessageController::getConversationId', ['filter' => 'authGuard']);
-$routes->post('/chat/send', 'MessageController::send', ['filter' => 'authGuard']);
-$routes->post('/chat/sendVoice', 'MessageController::sendVoice', ['filter' => 'authGuard']);
 $routes->get('admin/posts', 'Admin::posts', ['filter' => 'adminGuard']);
 $routes->get('/profile', 'ProfileController::index', ['filter' => 'authGuard']);
 $routes->get('/profile/edit', 'ProfileController::edit', ['filter' => 'authGuard']);
